@@ -109,7 +109,7 @@ int main(int argc, char** argv) {
     root->AddNode(planeNode);
     
     
-    root->AddNode(new GridNode());
+    setup->GetScene()->AddNode(new GridNode());
     
     
     FollowCamera* cam = new FollowCamera(*(new PerspectiveViewingVolume()));

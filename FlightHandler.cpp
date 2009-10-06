@@ -17,12 +17,24 @@ FlightHandler::FlightHandler(Airplane *plane) : plane(plane) {
 void FlightHandler::Handle(KeyboardEventArg arg) {
     if (arg.type == EVENT_PRESS) {
      
-        if (arg.sym == KEY_w) {
-            plane->SetTrottle(plane->GetTrottle()+0.1);
-        } else if (arg.sym == KEY_s) {
-            plane->SetTrottle(plane->GetTrottle()-0.1);
+        const float pitchAngle = 0.05;
+        
+        switch (arg.sym) {
+            case KEY_w:
+                plane->SetTrottle(plane->GetTrottle()+0.1);
+                break;
+            case KEY_s:
+                plane->SetTrottle(plane->GetTrottle()-0.1);
+                break;
+            case KEY_e:
+                plane->Pitch(pitchAngle);
+                break;
+            case KEY_d:
+                plane->Pitch(-pitchAngle);
+                break;
+            default:
+                break;
         }
-        
-        
+                
     }
 }

@@ -25,6 +25,7 @@ void AirplaneStats::Handle(ProcessEventArg arg) {
         logger.info << 
         "Airplane Statistics:\n" <<
         "Trottle: " << airplane->GetTrottle() <<
+        " Speed: " << airplane->GetSpeed() <<
         logger.end;
     }
 }

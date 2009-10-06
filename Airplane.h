@@ -22,21 +22,30 @@ using namespace OpenEngine::Scene;
 using namespace OpenEngine::Utils;
 using namespace OpenEngine::Geometry;
 
-class Airplane: public IListener<ProcessEventArg>, public IListener<InitializeEventArg>
-{
+class Airplane: public IListener<ProcessEventArg>, public IListener<InitializeEventArg> {
+    struct Point {
+        Vector<3,float> pos;
+        float mass;
+    };
+
+    Vector<3,float> speed;
     
     TransformationNode* node;
     float trottle;
     Timer timer;
-    
+    vector<Point> points;
     
 public:
     Airplane(TransformationNode* node);
     void Handle(InitializeEventArg arg);
     void Handle(ProcessEventArg arg);
     
+    Vector<3,float> GetSpeed();
+    
     void SetTrottle(float t);
     float GetTrottle();
+    
+    void Pitch(float dp);
     
     void GenerateSimpleGeometry(FaceSet* fs);
 };

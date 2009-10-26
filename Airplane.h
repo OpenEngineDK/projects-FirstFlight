@@ -14,6 +14,8 @@
 #include <Core/EngineEvents.h>
 #include <Utils/Timer.h>
 #include <Geometry/FaceSet.h>
+#include <Physics/IOERigidBody.h>
+#include <Physics/RigidBox.h>
 
 #include <Scene/TransformationNode.h>
 
@@ -21,20 +23,34 @@ using namespace OpenEngine::Core;
 using namespace OpenEngine::Scene;
 using namespace OpenEngine::Utils;
 using namespace OpenEngine::Geometry;
+using namespace OpenEngine::Physics;
 
 class Airplane: public IListener<ProcessEventArg>, public IListener<InitializeEventArg> {
     struct Point {
-        Vector<3,float> pos;
+        Point() : flap(0), forceIdx(0) {}
+
+        Vector<3,float> pos;        
         float mass;
+        int flap;
+        int forceIdx;
     };
 
-    Vector<3,float> speed;
+    Point *center,
+        *left_wing, *right_wing,*left_tail,*right_tail;
+
+    //Vector<3,float> speed;
     
     TransformationNode* node;
     float trottle;
     Timer timer;
-    vector<Point> points;
+    vector<Point*> points;
+
+    RigidBox* box;
     
+    float LiftCoefficient(float angle, int flaps);
+    float DragCoefficient(float angle, int flaps);
+    
+
 public:
     Airplane(TransformationNode* node);
     void Handle(InitializeEventArg arg);
@@ -46,6 +62,8 @@ public:
     float GetTrottle();
     
     void Pitch(float dp);
+
+    RigidBox* GetRigidBody();
     
     void GenerateSimpleGeometry(FaceSet* fs);
 };

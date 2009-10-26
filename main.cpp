@@ -23,6 +23,13 @@
 #include <Display/FollowCamera.h>
 #include <Display/PerspectiveViewingVolume.h>
 
+#include <Physics/FixedTimeStepPhysics.h>
+#include <Scene/CollectedGeometryTransformer.h>
+#include <Scene/QuadTransformer.h>
+#include <Scene/BSPTransformer.h>
+
+
+
 // SimpleSetup
 #include <Utils/SimpleSetup.h>
 
@@ -43,6 +50,7 @@ using namespace OpenEngine::Utils;
 using namespace OpenEngine::Scene;
 using namespace OpenEngine::Geometry;
 using namespace OpenEngine::Display;
+using namespace OpenEngine::Physics;
 
 /**
  * Main method for the first quarter project of CGD.
@@ -66,20 +74,42 @@ int main(int argc, char** argv) {
     setup->GetScene()->AddNode(root);
     
     
+
+    Vector<4,float> colr = Vector<4,float>(1,1,1,1);
     
     FaceSet* groundFs = new FaceSet();
-    FacePtr f = FacePtr(new Face(Vector<3,float>(-10,0, 10),
-                                 Vector<3,float>( 10,0,-10),
-                                 Vector<3,float>(-10,0,-10)));
+    FacePtr f = FacePtr(new Face(Vector<3,float>(-100,0, 100),
+                                 Vector<3,float>( 100,0, 100),
+                                 Vector<3,float>( 100,0,-100)));
+    f->colr[0] = colr;
+    f->colr[1] = colr;
+    f->colr[2] = colr;
+
+    groundFs->Add(f);
+    f = FacePtr(new Face(Vector<3,float>(-100,0, 100),
+                         Vector<3,float>( 100,0,-100),
+                         Vector<3,float>(-100,0,-100)));
     
-    f->colr[0] = Vector<4,float>(1,0,0,1);
-    f->colr[1] = Vector<4,float>(1,0,0,1);
-    f->colr[2] = Vector<4,float>(1,0,0,1);
+    f->colr[0] = colr;
+    f->colr[1] = colr;
+    f->colr[2] = colr;
+
     groundFs->Add(f);
     
     GeometryNode* groundNode = new GeometryNode(groundFs);
     
-    root->AddNode(groundNode);
+    SceneNode *physicsNode = new SceneNode();
+    physicsNode->AddNode(groundNode);
+
+    CollectedGeometryTransformer collT;
+    QuadTransformer quadT;
+    BSPTransformer bspT;
+    collT.Transform(*physicsNode);
+    quadT.Transform(*physicsNode);
+    bspT.Transform(*physicsNode);
+        
+
+    root->AddNode(physicsNode);
     
     TransformationNode* planeNode = new TransformationNode();
 
@@ -95,8 +125,24 @@ int main(int argc, char** argv) {
     GeometryNode* planeGeo = new GeometryNode(planeFs);
     planeNode->AddNode(planeGeo);
     
+
+    FixedTimeStepPhysics *physics = new FixedTimeStepPhysics(physicsNode);
+
+    RigidBox *box = plane->GetRigidBody();
+
+    physics->AddRigidBody(box);
+    root->AddNode(box->GetRigidBoxNode());
+
     FlightHandler* handler = new FlightHandler(plane);
         
+
+    // Add to engine for processing time (with its timer)
+    FixedTimeStepPhysicsTimer* ptimer = new FixedTimeStepPhysicsTimer(*physics);
+    setup->GetEngine().InitializeEvent().Attach(*physics);
+    setup->GetEngine().ProcessEvent().Attach(*ptimer);
+    setup->GetEngine().DeinitializeEvent().Attach(*physics);
+
+
     setup->GetKeyboard().KeyEvent().Attach(*handler);
     setup->GetEngine().ProcessEvent().Attach(*plane);
     setup->GetEngine().InitializeEvent().Attach(*plane);
@@ -115,7 +161,7 @@ int main(int argc, char** argv) {
     FollowCamera* cam = new FollowCamera(*(new PerspectiveViewingVolume()));
     cam->Follow(planeNode);
     
-    cam->SetPosition(Vector<3,float>(0,4,-10));
+    cam->SetPosition(Vector<3,float>(0,4,-15));
     cam->LookAt(Vector<3,float>(0,0,0));
     
     

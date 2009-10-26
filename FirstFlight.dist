@@ -7,12 +7,13 @@ darcs-dev / fh.daimi.au.dk:/users/cgd/code/openengine
 
 # project repository
 # (uncomment the following two lines after uploading your project)
-darcs /projects/FirstFlight http://openengine.dk/code/projects/FirstFlight
-darcs-dev /projects/FirstFlight fh.daimi.au.dk:/users/cgd/code/projects/FirstFlight
+darcs /projects/FirstFlight              http://openengine.dk/code/projects/FirstFlight
+darcs-dev /projects/FirstFlight          fh.daimi.au.dk:/users/cgd/code/projects/FirstFlight
 
 # required extensions
 darcs /extensions/SetupHelpers           http://openengine.dk/code/extensions/SetupHelpers
 darcs /extensions/HUD                    http://openengine.dk/code/extensions/HUD
+darcs /extensions/FixedTimeStepPhysics   http://openengine.dk/code/extensions/FixedTimeStepPhysics
 darcs /extensions/SDL                    http://openengine.dk/code/extensions/SDL
 darcs /extensions/CairoResource          http://openengine.dk/code/extensions/CairoResource
 darcs /extensions/SDLImage               http://openengine.dk/code/extensions/SDLImage
@@ -23,6 +24,7 @@ darcs /extensions/AccelerationStructures http://openengine.dk/code/extensions/Ac
 darcs /extensions/FaceBuilder            http://openengine.dk/code/extensions/FaceBuilder
 
 darcs-dev /extensions/SetupHelpers           fh.daimi.au.dk:/users/cgd/code/extensions/SetupHelpers
+darcs-dev /extensions/FixedTimeStepPhysics   fh.daimi.au.dk:/users/cgd/code/extensions/FixedTimeStepPhysics
 darcs-dev /extensions/HUD                    fh.daimi.au.dk:/users/cgd/code/extensions/HUD
 darcs-dev /extensions/SDL                    fh.daimi.au.dk:/users/cgd/code/extensions/SDL
 darcs-dev /extensions/OpenGLRenderer         fh.daimi.au.dk:/users/cgd/code/extensions/OpenGLRenderer
